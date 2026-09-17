@@ -7,14 +7,14 @@ from telegram import Update
 from bot_app import build_application
 
 
-application = build_application(use_updater=False)
+bot_application = build_application(use_updater=False)
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    await application.initialize()
+    await bot_application.initialize()
     yield
-    await application.shutdown()
+    await bot_application.shutdown()
 
 
 app = FastAPI(lifespan=lifespan)
@@ -29,6 +29,6 @@ async def webhook(
     if expected_secret and x_telegram_bot_api_secret_token != expected_secret:
         raise HTTPException(status_code=403, detail="Invalid webhook secret")
 
-    update = Update.de_json(await request.json(), application.bot)
-    await application.process_update(update)
+    update = Update.de_json(await request.json(), bot_application.bot)
+    await bot_application.process_update(update)
     return {"ok": True}
