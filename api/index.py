@@ -21,6 +21,7 @@ app = FastAPI(lifespan=lifespan)
 
 
 @app.post("/webhook")
+@app.post("/api/webhook")
 async def webhook(
     request: Request,
     x_telegram_bot_api_secret_token: str | None = Header(default=None),
